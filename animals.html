@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Animals
+    </title>
+  </head>
+  <body>
+    <h1>An Animals Game</h1>
+    <script>
+      (function() {
+        // your page initialization code here
+        // the DOM will be available here
+        var question = ["Can it fly?", "Does it purr?", "Does it roar?", "Is it pink?", "Does it caw?", "Does it quack?", "Does it have stripes?", "Does it eat meat?", "Does it eat dead meat?"];
+        var animal = ["pigeon", "dog", "cat", "lion", "flamingo", "crow", "duck", "tiger", "eagle", "vulture"];
+        var yes_next = [3, -3, 6, -5, -6, -7, -8, 8, -10]
+        var no_next = [1, 2, -2, 4, 5, 7, -4, -1, -9]
+        var maybe;
+        var current;
+        var guessing = true;
+        var yes;
+        var playing = true;
+        while (playing) {
+          guessing = true;
+          current = 0;
+          while (guessing) {
+            yes = confirm("I know " + animal.length + " animals. " + question[current]);
+            if (yes) {
+              if (yes_next[current] < 0) {
+                maybe = Math.abs(yes_next[current]) - 1;
+                correct = confirm("Is it a " + animal[maybe] + "?");
+                guessing = false;
+              } else {
+                current = yes_next[current];
+              }
+            } else {
+              if (no_next[current] < 0) {
+                maybe = Math.abs(no_next[current]) - 1;
+                correct = confirm("Is it a " + animal[maybe] + "?");
+                guessing = false;
+              } else {
+                current = no_next[current];
+              }
+            }
+          }
+
+          if (correct) {
+            current = 0;
+            playing = confirm("Yay! I win! Play again?");
+          } else {
+            animal[animal.length] = prompt("I give up. What is it?");
+            question[question.length] =
+              prompt("What question can I ask to tell a " + animal[maybe] + " from a " + animal[animal.length - 1] + "?");
+            if (yes) {
+              tmp = yes_next[current];
+              yes_next[current] = question.length - 1;
+              yes_next[yes_next[current]] = animal.length * -1;
+              no_next[yes_next[current]] = tmp;
+            } else {
+              tmp = no_next[current];
+              no_next[current] = question.length - 1;
+              yes_next[no_next[current]] = animal.length * -1;
+              no_next[no_next[current]] = tmp;
+            }
+            current = 0;
+            playing = confirm("Play again?");
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
